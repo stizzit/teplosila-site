@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск - ТЕПЛОСИЛА</title>
+    <link rel="icon" type="image/jpeg" href="logo/logo-2.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .search-results-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .search-header {
+            margin-bottom: 30px;
+        }
+        
+        .search-title {
+            font-size: 28px;
+            color: #1E3A5F;
+            margin-bottom: 10px;
+        }
+        
+        .search-query {
+            color: #3B82F6;
+            font-weight: 700;
+        }
+        
+        .search-count {
+            color: #64748B;
+            font-size: 16px;
+        }
+        
+        .search-box-large {
+            position: relative;
+            max-width: 600px;
+            margin: 20px 0;
+        }
+        
+        .search-box-large input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #DBEAFE;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box-large input:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+        
+        .search-box-large button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: linear-gradient(135deg, #1E3A5F, #3B82F6);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        
+        .search-box-large button:hover {
+            transform: scale(1.05);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.4s;
+            border: 2px solid #E2E8F0;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+            border-color: #3B82F6;
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #EF4444;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 1;
+        }
+        
+        .product-badge.popular {
+            background: #F59E0B;
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .product-card h4 {
+            color: #1E3A8A;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .product-card p {
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .price {
+            color: #EF4444;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        
+        .price small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #64748B;
+        }
+        
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .add-to-cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 20px;
+            color: #64748B;
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            color: #CBD5E1;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #1E3A5F, #3B82F6);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            background: #FEF3C7;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        @media (max-width: 992px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-row">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo-container">
+                <img src="logo/logo.jpg" alt="Логотип" class="logo" onerror="this.onerror=null; this.src='img/default.jpg';">
+                <div class="logo-text">
+                    <h1>ТЕПЛОСИЛА</h1>
+                    <p>Отопление и сантехника</p>
+                </div>
+            </div>
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Поиск товаров...">
+                    <button class="global-search-btn" id="globalSearchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="heating.html">Отопление</a></li>
+                    <li><a href="plumbing.html">Сантехника</a></li>
+                    <li><a href="index.html#services">Услуги</a></li>
+                    <li><a href="index.html#about">О нас</a></li>
+                    <li><a href="index.html#contacts">Контакты</a></li>
+                    <li><a href="cart.html" class="cart-link"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- Мобильное меню -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-header">
+                <h3>Меню</h3>
+                <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+            </div>
+            <ul class="mobile-menu-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                <li><a href="heating.html"><i class="fas fa-fire"></i> Отопление</a></li>
+                <li><a href="plumbing.html"><i class="fas fa-faucet"></i> Сантехника</a></li>
+                <li><a href="index.html#services"><i class="fas fa-tools"></i> Услуги</a></li>
+                <li><a href="index.html#about"><i class="fas fa-info-circle"></i> О нас</a></li>
+                <li><a href="index.html#contacts"><i class="fas fa-phone"></i> Контакты</a></li>
+                <li class="menu-divider"></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Корзина <span class="cart-count">0</span></a></li>
+                <li><a href="admin-login.html"><i class="fas fa-cog"></i> Админ-панель</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="search-results-container">
+        <div class="search-header">
+            <h1 class="search-title">🔍 Результаты поиска</h1>
+            <div class="search-box-large">
+                <input type="text" id="searchInputLarge" placeholder="Поиск по названию, цене, категории...">
+                <button id="searchBtnLarge"><i class="fas fa-search"></i></button>
+            </div>
+            <p class="search-count" id="searchCount"></p>
+        </div>
+        
+        <div class="products-grid" id="searchResults">
+            <!-- Результаты поиска -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 ТЕПЛОСИЛА. Все права защищены.</p>
+                <a href="admin-login.html" class="admin-secret-link"><i class="fas fa-user-shield"></i> Админ-панель</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Функция для подсветки совпадений
+        function highlightText(text, query) {
+            if (!query || !text) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Функция поиска
+        async function performSearch(query) {
+            if (!query) return;
+            
+            query = query.trim().toLowerCase();
+            
+            try {
+                const res = await fetch('http://localhost:3000/api/products');
+                const allProducts = await res.json();
+                
+                // Расширенный поиск по всем полям
+                const foundProducts = allProducts.filter(p => {
+                    const searchableText = [
+                        p.name || '',
+                        p.description || '',
+                        String(p.price || ''),
+                        p.section || '',
+                        p.tab || '',
+                        p.unit || '',
+                        p.page || ''
+                    ].join(' ').toLowerCase();
+                    
+                    // Разбиваем запрос на слова для лучшего поиска
+                    const queryWords = query.split(/\s+/);
+                    
+                    // Товар должен содержать ВСЕ слова из запроса (или хотя бы одно)
+                    return queryWords.some(word => searchableText.includes(word));
+                });
+                
+                displayResults(foundProducts, query);
+                
+                // Сохраняем для истории
+                sessionStorage.setItem('searchQuery', query);
+                sessionStorage.setItem('searchResults', JSON.stringify(foundProducts));
+                
+            } catch (err) {
+                console.error('Ошибка поиска:', err);
+                document.getElementById('searchResults').innerHTML = `
+                    <div class="no-results" style="grid-column: 1/-1;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Ошибка поиска</h3>
+                        <p>Не удалось выполнить поиск. Попробуйте позже.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Отображение результатов
+        function displayResults(products, query) {
+            const container = document.getElementById('searchResults');
+            const countEl = document.getElementById('searchCount');
+            
+            if (!products || products.length === 0) {
+                countEl.innerHTML = `По запросу "<span class="search-query">${query}</span>" ничего не найдено`;
+                container.innerHTML = `
+                    <div class="no-results" style="grid-column: 1/-1;">
+                        <i class="fas fa-search"></i>
+                        <h3>Ничего не найдено</h3>
+                        <p>Попробуйте изменить запрос или посмотрите товары в каталоге</p>
+                        <a href="heating.html" class="back-link"><i class="fas fa-fire"></i> Отопление</a>
+                        <a href="plumbing.html" class="back-link" style="margin-left: 10px;"><i class="fas fa-faucet"></i> Сантехника</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            countEl.innerHTML = `Найдено товаров: <strong>${products.length}</strong> по запросу "<span class="search-query">${query}</span>"`;
+            
+            container.innerHTML = products.map(p => {
+                const highlightedName = highlightText(p.name, query);
+                const highlightedDesc = highlightText(p.description || '', query);
+                
+                return `
+                    <div class="product-card">
+                        ${p.is_popular ? '<span class="product-badge popular">ХИТ</span>' : ''}
+                        <img src="${p.image_url || 'img/default.jpg'}" alt="${p.name}" onerror="this.onerror=null; this.src='img/default.jpg';">
+                        <h4>${highlightedName}</h4>
+                        <p>${highlightedDesc}</p>
+                        <div class="price">${p.price ? p.price.toLocaleString() + ' сом' : 'По запросу'} <small>/${p.unit || 'шт'}</small></div>
+                        <button class="add-to-cart-btn" data-id="${p.id}" data-name="${p.name}" data-price="${p.price || 0}" data-image="${p.image_url || 'img/default.jpg'}">
+                            <i class="fas fa-shopping-cart"></i> В корзину
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            // Привязываем кнопки корзины
+            container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const product = {
+                        id: this.dataset.id,
+                        name: this.dataset.name,
+                        price: parseFloat(this.dataset.price) || 0,
+                        image: this.dataset.image || 'img/default.jpg',
+                        quantity: 1
+                    };
+                    
+                    if (typeof window.addToCart === 'function') {
+                        window.addToCart(product);
+                    }
+                });
+            });
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            // Проверяем, есть ли сохранённые результаты
+            const savedQuery = sessionStorage.getItem('searchQuery');
+            const savedResults = sessionStorage.getItem('searchResults');
+            
+            if (savedQuery && savedResults) {
+                const products = JSON.parse(savedResults);
+                document.getElementById('searchInputLarge').value = savedQuery;
+                document.getElementById('globalSearchInput').value = savedQuery;
+                displayResults(products, savedQuery);
+            } else {
+                // Если перешли на страницу без поиска
+                document.getElementById('searchResults').innerHTML = `
+                    <div class="no-results" style="grid-column: 1/-1;">
+                        <i class="fas fa-search"></i>
+                        <h3>Введите поисковый запрос</h3>
+                        <p>Найдите нужный товар по названию, цене или категории</p>
+                    </div>
+                `;
+            }
+            
+            // Большой поиск на странице результатов
+            const searchInputLarge = document.getElementById('searchInputLarge');
+            const searchBtnLarge = document.getElementById('searchBtnLarge');
+            
+            const doSearch = () => {
+                const query = searchInputLarge.value.trim();
+                if (query) {
+                    performSearch(query);
+                    document.getElementById('globalSearchInput').value = query;
+                }
+            };
+            
+            searchBtnLarge.addEventListener('click', doSearch);
+            searchInputLarge.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') doSearch();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Сантехника - ТЕПЛОСИЛА</title>
+    <link rel="icon" type="image/jpeg" href="logo/logo-2.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-banner {
+            background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);
+        }
+        .page-banner h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .page-banner p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .main-categories-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .main-category-tab {
+            padding: 15px 30px;
+            background: white;
+            border: 2px solid #DBEAFE;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1E3A8A;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .main-category-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
+            border-color: #3B82F6;
+        }
+        .main-category-tab.active {
+            background: linear-gradient(135deg, #1E40AF, #3B82F6);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .category-section {
+            display: none;
+            margin-bottom: 50px;
+        }
+        .category-section.active {
+            display: block;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .category-header h2 {
+            color: #1E3A8A;
+            font-size: 2rem;
+            margin: 0;
+        }
+        .category-header i {
+            font-size: 2rem;
+            color: #3B82F6;
+        }
+        
+        .subcategories-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 15px;
+        }
+        .subcategory-tab {
+            padding: 10px 20px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.3s;
+        }
+        .subcategory-tab:hover {
+            background: #DBEAFE;
+            color: #1E3A8A;
+        }
+        .subcategory-tab.active {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+        }
+        
+        .subcategory-section {
+            display: none;
+        }
+        .subcategory-section.active {
+            display: block;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.4s;
+            border: 2px solid #E2E8F0;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+            border-color: #3B82F6;
+        }
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #EF4444;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 1;
+        }
+        .product-badge.popular {
+            background: #F59E0B;
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: transform 0.5s;
+        }
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+        .product-card h4 {
+            color: #1E3A8A;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .product-card p {
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .price {
+            color: #EF4444;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        .price small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #64748B;
+        }
+        
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .add-to-cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .empty-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 20px;
+            color: #64748B;
+        }
+        .empty-products i {
+            font-size: 4rem;
+            color: #CBD5E1;
+            margin-bottom: 20px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #F8FAFC;
+            border-radius: 50px;
+            padding: 5px 10px;
+            margin: 12px 0;
+            border: 1px solid #E2E8F0;
+        }
+        .quantity-btn {
+            width: 34px;
+            height: 34px;
+            border: none;
+            background: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1E3A8A;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .quantity-btn:hover {
+            background: linear-gradient(135deg, #1E40AF, #3B82F6);
+            color: white;
+        }
+        .quantity-input {
+            width: 55px;
+            padding: 8px 0;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1E3A8A;
+        }
+        .quantity-unit {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #64748B;
+            min-width: 45px;
+        }
+        
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .product-card {
+                padding: 12px !important;
+            }
+            .product-card img {
+                height: 120px !important;
+            }
+            .product-card h4 {
+                font-size: 0.85rem !important;
+            }
+            .product-card p {
+                display: none;
+            }
+            .price {
+                font-size: 1rem !important;
+            }
+            .quantity-btn {
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 0.9rem !important;
+            }
+            .quantity-input {
+                width: 42px !important;
+                font-size: 0.75rem !important;
+            }
+            .add-to-cart-btn {
+                padding: 8px !important;
+                font-size: 0.7rem !important;
+            }
+            .page-banner h1 {
+                font-size: 2rem;
+            }
+            .page-banner p {
+                font-size: 1rem;
+            }
+            .main-category-tab {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .category-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .product-card img {
+                height: 100px !important;
+            }
+            .main-category-tab {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+                flex: 1 0 calc(50% - 10px);
+                text-align: center;
+                justify-content: center;
+            }
+            .subcategory-tab {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .page-banner {
+                padding: 30px 0;
+            }
+            .page-banner h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Фон для страницы сантехники */
+        body.plumbing-page {
+            background-image: url('img/plumbing-bg.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            position: relative;
+        }
+        body.plumbing-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="plumbing-page">
+    <header>
+        <div class="container header-row">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo-container">
+                <img src="logo/logo.jpg" alt="Логотип" class="logo" onerror="this.onerror=null; this.src='img/default.jpg';">
+                <div class="logo-text">
+                    <h1>ТЕПЛОСИЛА</h1>
+                    <p>Сантехника</p>
+                </div>
+            </div>
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <input type="text" class="global-search-input" placeholder="Поиск...">
+                    <button class="global-search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="heating.html">Отопление</a></li>
+                    <li><a href="plumbing.html" class="active">Сантехника</a></li>
+                    <li><a href="index.html#services">Услуги</a></li>
+                    <li><a href="index.html#about">О нас</a></li>
+                    <li><a href="index.html#contacts">Контакты</a></li>
+                    <li><a href="cart.html" class="cart-link"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-header">
+                <div class="logo-container">
+                    <img src="logo/logo.jpg" alt="ТЕПЛОСИЛА" class="logo">
+                    <h3 style="color: white;">ТЕПЛОСИЛА</h3>
+                </div>
+                <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+            </div>
+            <ul class="mobile-menu-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                <li><a href="heating.html"><i class="fas fa-fire"></i> Отопление</a></li>
+                <li><a href="plumbing.html"><i class="fas fa-faucet"></i> Сантехника</a></li>
+                <li><a href="index.html#services"><i class="fas fa-tools"></i> Услуги</a></li>
+                <li><a href="index.html#about"><i class="fas fa-info-circle"></i> О нас</a></li>
+                <li><a href="index.html#contacts"><i class="fas fa-phone"></i> Контакты</a></li>
+                <li class="menu-divider"></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Корзина <span class="cart-count">0</span></a></li>
+                <li><a href="admin-login.html"><i class="fas fa-cog"></i> Админ-панель</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="page-banner">
+        <div class="container">
+            <h1><i class="fas fa-faucet"></i> Сантехника</h1>
+            <p>Трубы, фитинги, смесители и насосы</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-categories-tabs">
+            <div class="main-category-tab active" data-category="truby">
+                <i class="fas fa-grip-lines"></i> Трубы
+            </div>
+            <div class="main-category-tab" data-category="fitingi">
+                <i class="fas fa-link"></i> Фитинги
+            </div>
+            <div class="main-category-tab" data-category="smesiteli">
+                <i class="fas fa-faucet"></i> Смесители
+            </div>
+            <div class="main-category-tab" data-category="nasosy">
+                <i class="fas fa-water"></i> Насосы
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="truby" class="category-section active">
+            <div class="category-header">
+                <i class="fas fa-grip-lines"></i>
+                <h2>Трубы</h2>
+            </div>
+            <div class="subcategories-tabs">
+                <button class="subcategory-tab active" data-subcategory="ppr">ППР трубы</button>
+                <button class="subcategory-tab" data-subcategory="pvc">ПВХ трубы</button>
+                <button class="subcategory-tab" data-subcategory="metalplastic">Металлопластиковые</button>
+                <button class="subcategory-tab" data-subcategory="kanalizacia">Канализация</button>
+            </div>
+            
+            <div id="truby-ppr" class="subcategory-section active">
+                <div class="products-grid" id="ppr-products"></div>
+            </div>
+            <div id="truby-pvc" class="subcategory-section">
+                <div class="products-grid" id="pvc-products"></div>
+            </div>
+            <div id="truby-metalplastic" class="subcategory-section">
+                <div class="products-grid" id="metalplastic-products"></div>
+            </div>
+            <div id="truby-kanalizacia" class="subcategory-section">
+                <div class="products-grid" id="kanalizacia-products"></div>
+            </div>
+        </div>
+
+        <div id="fitingi" class="category-section">
+            <div class="category-header">
+                <i class="fas fa-link"></i>
+                <h2>Фитинги и комплектующие</h2>
+            </div>
+            <div class="subcategories-tabs">
+                <button class="subcategory-tab active" data-subcategory="connectors">Соединительные элементы</button>
+                <button class="subcategory-tab" data-subcategory="krany">Краны</button>
+                <button class="subcategory-tab" data-subcategory="other">Прочие комплектующие</button>
+            </div>
+            
+            <div id="fitingi-connectors" class="subcategory-section active">
+                <div class="products-grid" id="connectors-products"></div>
+            </div>
+            <div id="fitingi-krany" class="subcategory-section">
+                <div class="products-grid" id="krany-products"></div>
+            </div>
+            <div id="fitingi-other" class="subcategory-section">
+                <div class="products-grid" id="other-products"></div>
+            </div>
+        </div>
+
+        <div id="smesiteli" class="category-section">
+            <div class="category-header">
+                <i class="fas fa-faucet"></i>
+                <h2>Смесители</h2>
+            </div>
+            <div class="subcategories-tabs">
+                <button class="subcategory-tab active" data-subcategory="rakovina">Для раковины</button>
+                <button class="subcategory-tab" data-subcategory="kuhnya">Для кухни</button>
+                <button class="subcategory-tab" data-subcategory="vanna">Для ванной</button>
+                <button class="subcategory-tab" data-subcategory="dush">Для душа</button>
+            </div>
+            
+            <div id="smesiteli-rakovina" class="subcategory-section active">
+                <div class="products-grid" id="rakovina-products"></div>
+            </div>
+            <div id="smesiteli-kuhnya" class="subcategory-section">
+                <div class="products-grid" id="kuhnya-products"></div>
+            </div>
+            <div id="smesiteli-vanna" class="subcategory-section">
+                <div class="products-grid" id="vanna-products"></div>
+            </div>
+            <div id="smesiteli-dush" class="subcategory-section">
+                <div class="products-grid" id="dush-products"></div>
+            </div>
+        </div>
+
+        <div id="nasosy" class="category-section">
+            <div class="category-header">
+                <i class="fas fa-water"></i>
+                <h2>Насосы</h2>
+            </div>
+            <div class="subcategories-tabs">
+                <button class="subcategory-tab active" data-subcategory="drenazhnye">Дренажные</button>
+                <button class="subcategory-tab" data-subcategory="povysitelnye">Повысительные</button>
+                <button class="subcategory-tab" data-subcategory="glubinnye">Глубинные</button>
+                <button class="subcategory-tab" data-subcategory="cirkulyacionnye">Циркуляционные</button>
+            </div>
+            
+            <div id="nasosy-drenazhnye" class="subcategory-section active">
+                <div class="products-grid" id="drenazhnye-products"></div>
+            </div>
+            <div id="nasosy-povysitelnye" class="subcategory-section">
+                <div class="products-grid" id="povysitelnye-products"></div>
+            </div>
+            <div id="nasosy-glubinnye" class="subcategory-section">
+                <div class="products-grid" id="glubinnye-products"></div>
+            </div>
+            <div id="nasosy-cirkulyacionnye" class="subcategory-section">
+                <div class="products-grid" id="cirkulyacionnye-products"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 ТЕПЛОСИЛА. Все права защищены.</p>
+                <a href="admin-login.html" class="admin-secret-link"><i class="fas fa-user-shield"></i> Админ-панель</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Фиксированная кнопка корзины для мобильных -->
+    <a href="cart.html" class="fixed-cart-btn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </a>
+
+    <script src="script.js"></script>
+    <script>
+        // Инициализация мобильного меню
+        (function() {
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuClose = document.getElementById('mobileMenuClose');
+            
+            if (!menuToggle || !mobileMenu) return;
+            
+            function openMenu() {
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeMenu() {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            menuToggle.addEventListener('click', openMenu);
+            if (menuClose) menuClose.addEventListener('click', closeMenu);
+            
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+            
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target === mobileMenu) closeMenu();
+            });
+        })();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainTabs = document.querySelectorAll('.main-category-tab');
+            mainTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    const category = this.dataset.category;
+                    mainTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(category).classList.add('active');
+                });
+            });
+            
+            document.querySelectorAll('.subcategory-tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    const parent = this.closest('.category-section');
+                    const subcategory = this.dataset.subcategory;
+                    parent.querySelectorAll('.subcategory-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    if (subcategory) {
+                        parent.querySelectorAll('.subcategory-section').forEach(s => s.classList.remove('active'));
+                        const targetId = parent.id + '-' + subcategory;
+                        const target = document.getElementById(targetId);
+                        if (target) target.classList.add('active');
+                    }
+                });
+            });
+            
+            loadAllProducts();
+        });
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        async function loadAllProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                if (response.ok) {
+                    const allProducts = await response.json();
+                    const products = allProducts.filter(p => p.page === 'plumbing.html' || !p.page);
+                    
+                    if (products.length > 0) {
+                        renderTruby(products.filter(p => p.section === 'truby_santeh' || p.section === 'truby'));
+                        renderFitingi(products.filter(p => p.section === 'fitingi_santeh' || p.section === 'fitingi'));
+                        renderSmesiteli(products.filter(p => p.section === 'smesiteli'));
+                        renderNasosy(products.filter(p => p.section === 'nasosy'));
+                    }
+                }
+            } catch (err) {
+                console.error('Ошибка:', err);
+            }
+            
+            if (typeof window.initQuantityControls === 'function') {
+                setTimeout(() => window.initQuantityControls(), 100);
+            }
+        }
+        
+        function renderTruby(products) {
+            renderProductGrid('ppr-products', products.filter(p => p.tab === 'ppr'), 'pipe');
+            renderProductGrid('pvc-products', products.filter(p => p.tab === 'pvc'), 'pipe');
+            renderProductGrid('metalplastic-products', products.filter(p => p.tab === 'metalplastic-santeh'), 'pipe');
+            renderProductGrid('kanalizacia-products', products.filter(p => p.tab === 'kanalizacia'), 'pipe');
+        }
+        
+        function renderFitingi(products) {
+            renderProductGrid('connectors-products', products.filter(p => p.tab === 'connectors-santeh'), 'simple');
+            renderProductGrid('krany-products', products.filter(p => p.tab === 'krany-santeh'), 'simple');
+            renderProductGrid('other-products', products.filter(p => p.tab === 'other-santeh'), 'simple');
+        }
+        
+        function renderSmesiteli(products) {
+            renderProductGrid('rakovina-products', products.filter(p => p.tab === 'rakovina'), 'simple');
+            renderProductGrid('kuhnya-products', products.filter(p => p.tab === 'kuhnya'), 'simple');
+            renderProductGrid('vanna-products', products.filter(p => p.tab === 'vanna'), 'simple');
+            renderProductGrid('dush-products', products.filter(p => p.tab === 'dush'), 'simple');
+        }
+        
+        function renderNasosy(products) {
+            renderProductGrid('drenazhnye-products', products.filter(p => p.tab === 'drenazhnye'), 'simple');
+            renderProductGrid('povysitelnye-products', products.filter(p => p.tab === 'povysitelnye'), 'simple');
+            renderProductGrid('glubinnye-products', products.filter(p => p.tab === 'glubinnye'), 'simple');
+            renderProductGrid('cirkulyacionnye-products', products.filter(p => p.tab === 'cirkulyacionnye'), 'simple');
+        }
+        
+        function renderProductGrid(containerId, products, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            if (!products || products.length === 0) {
+                container.innerHTML = `<div class="empty-products"><i class="fas fa-box-open"></i><p>Товары скоро появятся</p></div>`;
+                return;
+            }
+            
+            container.innerHTML = products.map(p => {
+                let defaultQty = 1;
+                let unitText = p.unit || 'шт';
+                
+                if (type === 'pipe') {
+                    unitText = 'метр';
+                } else if (p.unit === 'метр') {
+                    unitText = 'метр';
+                }
+                
+                return `
+                    <div class="product-card">
+                        ${p.is_popular ? '<span class="product-badge popular">🔥 ХИТ</span>' : ''}
+                        <img src="${p.image_url || 'img/default.jpg'}" alt="${escapeHtml(p.name)}" onerror="this.src='img/default.jpg';">
+                        <h4>${escapeHtml(p.name)}</h4>
+                        <p>${escapeHtml(p.description || '')}</p>
+                        <div class="price">${(p.price || 0).toLocaleString()} сом</div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn qty-minus">−</button>
+                            <input class="quantity-input" value="${defaultQty}" min="1">
+                            <span class="quantity-unit">${unitText}</span>
+                            <button class="quantity-btn qty-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price || 0}" data-image="${p.image_url || 'img/default.jpg'}">
+                            <i class="fas fa-shopping-cart"></i> В корзину
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Обновление счетчика корзины
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('teplosilaCart') || '{"count":0}');
+            document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.count || 0);
+        }
+        
+        updateCartCount();
+        setInterval(updateCartCount, 1000);
+    </script>
+</body>
+</html>

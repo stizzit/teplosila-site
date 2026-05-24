@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - ТЕПЛОСИЛА</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: #f1f5f9; }
+        
+        .admin-container { display: flex; min-height: 100vh; }
+        
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1E3A5F 0%, #0D2137 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 { font-size: 18px; margin-top: 10px; }
+        .sidebar-header p { font-size: 12px; opacity: 0.7; }
+        
+        .nav-item {
+            padding: 14px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(59,130,246,0.3);
+            color: white;
+            border-left: 3px solid #3B82F6;
+        }
+        
+        .admin-main { flex: 1; margin-left: 280px; }
+        
+        .admin-header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .admin-content { padding: 30px; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1E3A5F, #3B82F6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-size: 14px;
+        }
+        
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-success { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        .btn-danger { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        .btn-warning { background: #f59e0b; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 5px; }
+        
+        .products-table {
+            background: white;
+            border-radius: 16px;
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+        th { background: #f8fafc; font-weight: 600; color: #1E3A5F; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748B;
+        }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #1E3A5F; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 5px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-new { background: #FEF3C7; color: #D97706; }
+        .status-processing { background: #DBEAFE; color: #2563EB; }
+        .status-ready { background: #D1FAE5; color: #059669; }
+        .status-delivered { background: #D1FAE5; color: #059669; }
+        .status-cancelled { background: #FEE2E2; color: #DC2626; }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar { display: none; }
+            .admin-main { margin-left: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .admin-content { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-fire" style="font-size: 40px;"></i>
+                <h3>ТЕПЛОСИЛА</h3>
+                <p>Админ-панель</p>
+            </div>
+            <div class="nav-item active" data-section="dashboard">
+                <i class="fas fa-chart-line"></i> Главная
+            </div>
+            <div class="nav-item" data-section="products">
+                <i class="fas fa-box"></i> Товары
+            </div>
+            <div class="nav-item" data-section="categories">
+                <i class="fas fa-tags"></i> Категории
+            </div>
+            <div class="nav-item" data-section="orders">
+                <i class="fas fa-shopping-cart"></i> Заказы
+            </div>
+            <div style="margin-top: auto;">
+                <a href="index.html" class="nav-item" style="text-decoration: none;">
+                    <i class="fas fa-arrow-left"></i> На сайт
+                </a>
+            </div>
+        </div>
+        
+        <div class="admin-main">
+            <div class="admin-header">
+                <h2 id="pageTitle">Главная</h2>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
+            
+            <div class="admin-content">
+                <!-- Dashboard -->
+                <div id="dashboard" class="content-section active">
+                    <h3 style="margin-bottom: 20px;">📊 Общая статистика</h3>
+                    <div class="products-table">
+                        <table>
+                            <thead>
+                                <tr><th>Показатель</th><th>Значение</th></tr>
+                            </thead>
+                            <tbody id="statsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Products -->
+                <div id="products" class="content-section">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;">
+                        <h3>📦 Товары</h3>
+                        <button class="btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Добавить товар</button>
+                    </div>
+                    <div class="products-table">
+                        <table>
+                            <thead>
+                                <tr><th>ID</th><th>Название</th><th>Страница</th><th>Секция</th><th>Вкладка</th><th>Цена</th><th>Действия</th></tr>
+                            </thead>
+                            <tbody id="productsList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Categories -->
+                <div id="categories" class="content-section">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;">
+                        <h3>🏷️ Категории</h3>
+                        <button class="btn-primary" id="addCategoryBtn"><i class="fas fa-plus"></i> Добавить категорию</button>
+                    </div>
+                    <div class="products-table">
+                        <table>
+                            <thead>
+                                <tr><th>ID</th><th>Название</th><th>Slug</th><th>Порядок</th><th>Действия</th></tr>
+                            </thead>
+                            <tbody id="categoriesList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Orders -->
+                <div id="orders" class="content-section">
+                    <h3 style="margin-bottom: 20px;">🛒 Заказы</h3>
+                    <div class="products-table">
+                        <table>
+                            <thead>
+                                <tr><th>№ заказа</th><th>Клиент</th><th>Телефон</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr>
+                            </thead>
+                            <tbody id="ordersList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно товара -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">➕ Добавить товар</h3>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Название товара *</label>
+                    <input type="text" id="productName" required placeholder="Например: Электрический котел 6 кВт">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Страница</label>
+                        <select id="productPage">
+                            <option value="heating.html">Отопление (heating.html)</option>
+                            <option value="plumbing.html">Сантехника (plumbing.html)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Цена (сом)</label>
+                        <input type="number" id="productPrice" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Секция</label>
+                        <select id="productSection" onchange="updateTabs()">
+                            <option value="">Выберите секцию...</option>
+                            <optgroup label="Отопление">
+                                <option value="kotly">Котлы</option>
+                                <option value="radiatory">Радиаторы</option>
+                                <option value="truby">Трубы (отопление)</option>
+                                <option value="fitingi">Фитинги (отопление)</option>
+                                <option value="kollektory">Коллекторы</option>
+                            </optgroup>
+                            <optgroup label="Сантехника">
+                                <option value="truby_santeh">Трубы (сантехника)</option>
+                                <option value="fitingi_santeh">Фитинги (сантехника)</option>
+                                <option value="smesiteli">Смесители</option>
+                                <option value="nasosy">Насосы</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Вкладка / Подкатегория</label>
+                        <select id="productTab">
+                            <option value="">Сначала выберите секцию</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Единица измерения</label>
+                    <select id="productUnit">
+                        <option value="шт">шт</option>
+                        <option value="метр">метр</option>
+                        <option value="секция">секция</option>
+                        <option value="комплект">комплект</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="productDesc" rows="3" placeholder="Краткое описание товара"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>URL изображения</label>
+                    <input type="text" id="productImage" placeholder="img/tovar.jpg или https://...">
+                    <div class="form-hint">Можно вставить ссылку на картинку из интернета</div>
+                </div>
+                
+                <div class="checkbox-group" style="margin-bottom: 15px;">
+                    <label>
+                        <input type="checkbox" id="productInStock" checked> В наличии
+                    </label>
+                    <label>
+                        <input type="checkbox" id="productPopular"> Популярный товар
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>Порядок сортировки</label>
+                    <input type="number" id="productSortOrder" value="0" min="0">
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 16px;">
+                    <i class="fas fa-save"></i> Сохранить товар
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Модальное окно категории -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="categoryModalTitle">➕ Добавить категорию</h3>
+                <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label>Название категории *</label>
+                    <input type="text" id="categoryName" required placeholder="Например: Электрические котлы">
+                </div>
+                <div class="form-group">
+                    <label>Slug (автоматически)</label>
+                    <input type="text" id="categorySlug" placeholder="elektricheskie-kotly" readonly style="background: #f8fafc;">
+                    <div class="form-hint">Заполняется автоматически из названия</div>
+                </div>
+                <div class="form-group">
+                    <label>Порядок сортировки</label>
+                    <input type="number" id="categorySortOrder" value="0" min="0">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 16px;">
+                    <i class="fas fa-save"></i> Сохранить категорию
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let currentProductId = null;
+        let currentCategoryId = null;
+        
+        // ===== ТАБЫ ДЛЯ СЕКЦИЙ =====
+        const tabsConfig = {
+            'kotly': [
+                { value: 'elektro-kotly', label: 'Электрические котлы' },
+                { value: 'poluavtomat-kotly', label: 'Полуавтоматические котлы' },
+                { value: 'automat-kotly', label: 'Автоматические котлы' },
+                { value: 'klassika-kotly', label: 'Классические котлы' },
+                { value: 'sapog-kotly', label: 'Котлы Сапог' }
+            ],
+            'radiatory': [
+                { value: 'aluminium-60', label: 'Алюминиевые 60см' },
+                { value: 'aluminium-40', label: 'Алюминиевые 40см' },
+                { value: 'aluminium-30', label: 'Алюминиевые 30см' },
+                { value: 'bimetal-60', label: 'Биметаллические 60см' },
+                { value: 'bimetal-40', label: 'Биметаллические 40см' },
+                { value: 'bimetal-30', label: 'Биметаллические 30см' },
+                { value: 'castiron', label: 'Чугунные' }
+            ],
+            'truby': [
+                { value: 'metalplastic', label: 'Металлопластиковые трубы' },
+                { value: 'steel', label: 'Стальные трубы' },
+                { value: 'warmfloor', label: 'Для теплого пола' },
+                { value: 'chimney-steel', label: 'Дымоход стальной' },
+                { value: 'chimney-nerzh', label: 'Дымоход нержавейка' }
+            ],
+            'fitingi': [
+                { value: 'connectors', label: 'Соединительные элементы' },
+                { value: 'krany', label: 'Краны' },
+                { value: 'other', label: 'Прочие комплектующие' }
+            ],
+            'kollektory': [
+                { value: 'kollektory', label: 'Коллекторы' },
+                { value: 'fitingi-tpl', label: 'Фитинги для теплого пола' }
+            ],
+            'truby_santeh': [
+                { value: 'ppr', label: 'ППР трубы' },
+                { value: 'pvc', label: 'ПВХ трубы' },
+                { value: 'metalplastic-santeh', label: 'Металлопластиковые' },
+                { value: 'kanalizacia', label: 'Канализация' }
+            ],
+            'fitingi_santeh': [
+                { value: 'connectors-santeh', label: 'Соединительные элементы' },
+                { value: 'krany-santeh', label: 'Краны' },
+                { value: 'other-santeh', label: 'Прочие комплектующие' }
+            ],
+            'smesiteli': [
+                { value: 'rakovina', label: 'Для раковины' },
+                { value: 'kuhnya', label: 'Для кухни' },
+                { value: 'vanna', label: 'Для ванной' },
+                { value: 'dush', label: 'Для душа' }
+            ],
+            'nasosy': [
+                { value: 'drenazhnye', label: 'Дренажные' },
+                { value: 'povysitelnye', label: 'Повысительные' },
+                { value: 'glubinnye', label: 'Глубинные' },
+                { value: 'cirkulyacionnye', label: 'Циркуляционные' }
+            ]
+        };
+        
+        function updateTabs() {
+            const section = document.getElementById('productSection').value;
+            const tabSelect = document.getElementById('productTab');
+            
+            tabSelect.innerHTML = '<option value="">Выберите вкладку...</option>';
+            
+            if (section && tabsConfig[section]) {
+                tabsConfig[section].forEach(tab => {
+                    tabSelect.innerHTML += `<option value="${tab.value}">${tab.label}</option>`;
+                });
+            }
+        }
+        
+        // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
+        (function() {
+            const s = localStorage.getItem('teplosilaAdmin');
+            if (!s) { window.location.href = 'admin-login.html'; return; }
+            try { 
+                if (JSON.parse(s).expires < Date.now()) { 
+                    localStorage.removeItem('teplosilaAdmin'); 
+                    window.location.href = 'admin-login.html'; 
+                } 
+            } catch(e) { 
+                window.location.href = 'admin-login.html'; 
+            }
+        })();
+        
+        // ===== НАВИГАЦИЯ =====
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+                if (!section) return;
+                
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+                document.getElementById('pageTitle').textContent = item.textContent.trim();
+                
+                if (section === 'dashboard') loadDashboard();
+                if (section === 'products') loadProducts();
+                if (section === 'categories') loadCategories();
+                if (section === 'orders') loadOrders();
+            });
+        });
+        
+        // ===== ВЫХОД =====
+        document.getElementById('logoutBtn').addEventListener('click', () => { 
+            localStorage.removeItem('teplosilaAdmin'); 
+            window.location.href = 'admin-login.html'; 
+        });
+        
+        // ===== ГЕНЕРАЦИЯ SLUG =====
+        document.getElementById('categoryName').addEventListener('input', function() {
+            const slug = this.value
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+            document.getElementById('categorySlug').value = slug;
+        });
+        
+        // ===== ЗАГРУЗКА ДАННЫХ =====
+        async function loadDashboard() {
+            try {
+                const statsRes = await fetch(`${API_URL}/admin/stats`);
+                const stats = await statsRes.json();
+                
+                const ordersRes = await fetch(`${API_URL}/orders`);
+                const orders = await ordersRes.json();
+                
+                const newOrders = orders.filter(o => o.status === 'new').length;
+                const processing = orders.filter(o => o.status === 'processing').length;
+                const ready = orders.filter(o => o.status === 'ready').length;
+                const delivered = orders.filter(o => o.status === 'delivered').length;
+                
+                document.getElementById('statsTable').innerHTML = `
+                    <tr><td>📦 Товаров</td><td><strong>${stats.products || 0}</strong></td></tr>
+                    <tr><td>🏷️ Категорий</td><td><strong>${stats.categories || 0}</strong></td></tr>
+                    <tr><td>🆕 Новых заказов</td><td><strong>${newOrders}</strong></td></tr>
+                    <tr><td>⚙️ В сборке</td><td><strong>${processing}</strong></td></tr>
+                    <tr><td>✅ Готовых к выдаче</td><td><strong>${ready}</strong></td></tr>
+                    <tr><td>📦 Выдано</td><td><strong>${delivered}</strong></td></tr>
+                    <tr><td>💰 Выручка</td><td><strong>${(stats.revenue || 0).toLocaleString()} сом</strong></td></tr>
+                `;
+            } catch(e) {
+                console.error('Ошибка загрузки статистики:', e);
+            }
+        }
+        
+        async function loadProducts() {
+            const res = await fetch(`${API_URL}/products`);
+            const products = await res.json();
+            
+            document.getElementById('productsList').innerHTML = (products || []).map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.name || '-'}</td>
+                    <td>${p.page || '-'}</td>
+                    <td>${p.section || '-'}</td>
+                    <td>${p.tab || '-'}</td>
+                    <td>${p.price ? p.price.toLocaleString() + ' сом' : '-'}</td>
+                    <td>
+                        <button class="btn-warning" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="7">Нет товаров</td></tr>';
+        }
+        
+        async function loadCategories() {
+            const res = await fetch(`${API_URL}/categories`);
+            const cats = await res.json();
+            
+            document.getElementById('categoriesList').innerHTML = (cats || []).map(c => `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.name}</td>
+                    <td>${c.slug}</td>
+                    <td>${c.sort_order}</td>
+                    <td>
+                        <button class="btn-warning" onclick="editCategory(${c.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="deleteCategory(${c.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5">Нет категорий</td></tr>';
+        }
+        
+        async function loadOrders() {
+            const res = await fetch(`${API_URL}/orders`);
+            const orders = await res.json();
+            
+            const statusLabels = {
+                'new': '🆕 Новый',
+                'processing': '⚙️ В сборке',
+                'ready': '✅ Готов к выдаче',
+                'delivered': '✅ Выдан',
+                'cancelled': '❌ Отменён'
+            };
+            
+            const statusClass = {
+                'new': 'status-new',
+                'processing': 'status-processing',
+                'ready': 'status-ready',
+                'delivered': 'status-delivered',
+                'cancelled': 'status-cancelled'
+            };
+            
+            document.getElementById('ordersList').innerHTML = (orders || []).map(o => `
+                <tr>
+                    <td>${o.order_number}</td>
+                    <td>${o.customer_name}</td>
+                    <td>${o.customer_phone}</td>
+                    <td>${o.total.toLocaleString()} сом</td>
+                    <td><span class="status-badge ${statusClass[o.status] || 'status-new'}">${statusLabels[o.status] || o.status}</span></td>
+                    <td>
+                        ${o.status === 'new' ? `<button class="btn-warning" onclick="updateStatus(${o.id}, 'processing')">⚙️ В сборку</button>` : ''}
+                        ${o.status === 'processing' ? `<button class="btn-success" onclick="updateStatus(${o.id}, 'ready')">✅ Готов</button>` : ''}
+                        ${o.status === 'ready' ? `<button class="btn-success" onclick="updateStatus(${o.id}, 'delivered')">📦 Выдать</button>` : ''}
+                        ${o.status !== 'delivered' && o.status !== 'cancelled' ? `<button class="btn-danger" onclick="updateStatus(${o.id}, 'cancelled')">❌</button>` : ''}
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="6">Нет заказов</td></tr>';
+        }
+        
+        async function updateStatus(id, status) {
+            if (confirm('Изменить статус заказа?')) {
+                await fetch(`${API_URL}/orders/${id}/status`, { 
+                    method: 'PUT', 
+                    headers: {'Content-Type':'application/json'}, 
+                    body: JSON.stringify({status}) 
+                });
+                loadOrders();
+                loadDashboard();
+            }
+        }
+        
+        // ===== ДОБАВЛЕНИЕ/РЕДАКТИРОВАНИЕ ТОВАРА =====
+        document.getElementById('addProductBtn').addEventListener('click', () => { 
+            currentProductId = null; 
+            document.getElementById('modalTitle').textContent = '➕ Добавить товар'; 
+            document.getElementById('productForm').reset(); 
+            document.getElementById('productModal').classList.add('active'); 
+        });
+        
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const product = {
+                name: document.getElementById('productName').value,
+                page: document.getElementById('productPage').value,
+                section: document.getElementById('productSection').value,
+                tab: document.getElementById('productTab').value,
+                price: document.getElementById('productPrice').value || 0,
+                unit: document.getElementById('productUnit').value,
+                description: document.getElementById('productDesc').value,
+                image_url: document.getElementById('productImage').value,
+                in_stock: document.getElementById('productInStock').checked ? 1 : 0,
+                is_popular: document.getElementById('productPopular').checked ? 1 : 0,
+                sort_order: document.getElementById('productSortOrder').value || 0
+            };
+            
+            const url = currentProductId ? `${API_URL}/products/${currentProductId}` : `${API_URL}/products`;
+            const method = currentProductId ? 'PUT' : 'POST';
+            
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(product)
+                });
+                
+                if (res.ok) {
+                    alert(currentProductId ? '✅ Товар обновлен!' : '✅ Товар добавлен!');
+                    closeProductModal();
+                    loadProducts();
+                    loadDashboard();
+                } else {
+                    alert('❌ Ошибка сохранения товара');
+                }
+            } catch(err) {
+                alert('❌ Ошибка соединения с сервером');
+            }
+        });
+        
+        window.editProduct = async (id) => {
+            currentProductId = id;
+            const res = await fetch(`${API_URL}/products/${id}`);
+            const p = await res.json();
+            
+            document.getElementById('productName').value = p.name || '';
+            document.getElementById('productPage').value = p.page || 'heating.html';
+            document.getElementById('productSection').value = p.section || '';
+            updateTabs();
+            document.getElementById('productTab').value = p.tab || '';
+            document.getElementById('productPrice').value = p.price || '';
+            document.getElementById('productUnit').value = p.unit || 'шт';
+            document.getElementById('productDesc').value = p.description || '';
+            document.getElementById('productImage').value = p.image_url || '';
+            document.getElementById('productInStock').checked = p.in_stock == 1;
+            document.getElementById('productPopular').checked = p.is_popular == 1;
+            document.getElementById('productSortOrder').value = p.sort_order || 0;
+            
+            document.getElementById('modalTitle').textContent = '✏️ Редактировать товар';
+            document.getElementById('productModal').classList.add('active');
+        };
+        
+        window.deleteProduct = async (id) => { 
+            if (confirm('Удалить товар?')) { 
+                await fetch(`${API_URL}/products/${id}`, {method:'DELETE'}); 
+                loadProducts(); 
+                loadDashboard();
+            } 
+        };
+        
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+        
+        // ===== ДОБАВЛЕНИЕ/РЕДАКТИРОВАНИЕ КАТЕГОРИИ =====
+        document.getElementById('addCategoryBtn').addEventListener('click', () => { 
+            currentCategoryId = null; 
+            document.getElementById('categoryModalTitle').textContent = '➕ Добавить категорию'; 
+            document.getElementById('categoryForm').reset(); 
+            document.getElementById('categoryModal').classList.add('active'); 
+        });
+        
+        document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const category = {
+                name: document.getElementById('categoryName').value,
+                slug: document.getElementById('categorySlug').value,
+                sort_order: document.getElementById('categorySortOrder').value || 0
+            };
+            
+            const url = currentCategoryId ? `${API_URL}/categories/${currentCategoryId}` : `${API_URL}/categories`;
+            const method = currentCategoryId ? 'PUT' : 'POST';
+            
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(category)
+                });
+                
+                if (res.ok) {
+                    alert(currentCategoryId ? '✅ Категория обновлена!' : '✅ Категория добавлена!');
+                    closeCategoryModal();
+                    loadCategories();
+                    loadDashboard();
+                } else {
+                    alert('❌ Ошибка сохранения категории');
+                }
+            } catch(err) {
+                alert('❌ Ошибка соединения с сервером');
+            }
+        });
+        
+        window.editCategory = async (id) => {
+            currentCategoryId = id;
+            const res = await fetch(`${API_URL}/categories`);
+            const cats = await res.json();
+            const cat = cats.find(c => c.id === id);
+            
+            if (cat) {
+                document.getElementById('categoryName').value = cat.name;
+                document.getElementById('categorySlug').value = cat.slug;
+                document.getElementById('categorySortOrder').value = cat.sort_order || 0;
+                document.getElementById('categoryModalTitle').textContent = '✏️ Редактировать категорию';
+                document.getElementById('categoryModal').classList.add('active');
+            }
+        };
+        
+        window.deleteCategory = async (id) => { 
+            if (confirm('Удалить категорию?')) { 
+                await fetch(`${API_URL}/categories/${id}`, {method:'DELETE'}); 
+                loadCategories(); 
+                loadDashboard();
+            } 
+        };
+        
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.remove('active');
+        }
+        
+        // ===== ЗАКРЫТИЕ МОДАЛЬНЫХ ОКОН ПО КЛИКУ ВНЕ =====
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) closeProductModal();
+        });
+        
+        document.getElementById('categoryModal').addEventListener('click', function(e) {
+            if (e.target === this) closeCategoryModal();
+        });
+        
+        // ===== ЗАГРУЗКА ПРИ СТАРТЕ =====
+        loadDashboard();
+    </script>
+</body>
+</html>

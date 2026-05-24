@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ТЕПЛОСИЛА - Отопление и Сантехника</title>
+    <link rel="icon" type="image/jpeg" href="logo/logo-2.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-row">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="logo-container">
+                <img src="logo/logo.jpg" alt="Логотип ТЕПЛОСИЛА" class="logo" onerror="this.onerror=null; this.src='img/default.jpg';">
+                <div class="logo-text">
+                    <h1>ТЕПЛОСИЛА</h1>
+                    <p>Отопление и сантехника</p>
+                </div>
+            </div>
+            
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Поиск товаров...">
+                    <button class="global-search-btn" id="globalSearchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="index.html" class="active">Главная</a></li>
+                    <li><a href="heating.html">Отопление</a></li>
+                    <li><a href="plumbing.html">Сантехника</a></li>
+                    <li><a href="#services">Услуги</a></li>
+                    <li><a href="#about">О нас</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                    <li><a href="cart.html" class="cart-link"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-header">
+                <div class="logo-container">
+                    <img src="logo/logo.jpg" alt="ТЕПЛОСИЛА" class="logo">
+                    <h3 style="color: white;">ТЕПЛОСИЛА</h3>
+                </div>
+                <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+            </div>
+            <ul class="mobile-menu-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                <li><a href="heating.html"><i class="fas fa-fire"></i> Отопление</a></li>
+                <li><a href="plumbing.html"><i class="fas fa-faucet"></i> Сантехника</a></li>
+                <li><a href="#services"><i class="fas fa-tools"></i> Услуги</a></li>
+                <li><a href="#about"><i class="fas fa-info-circle"></i> О нас</a></li>
+                <li><a href="#contacts"><i class="fas fa-phone"></i> Контакты</a></li>
+                <li class="menu-divider"></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Корзина <span class="cart-count">0</span></a></li>
+                <li><a href="admin-login.html"><i class="fas fa-cog"></i> Админ-панель</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">ТЕПЛОСИЛА</h1>
+                <p class="hero-subtitle">Всё для отопления и сантехники в Караколе</p>
+                <div class="hero-buttons">
+                    <a href="heating.html" class="hero-btn primary"><i class="fas fa-fire"></i> Отопление</a>
+                    <a href="plumbing.html" class="hero-btn secondary"><i class="fas fa-faucet"></i> Сантехника</a>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">5+</span>
+                    <span class="stat-label">лет работы</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1000+</span>
+                    <span class="stat-label">покупателей</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">5000+</span>
+                    <span class="stat-label">товаров</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-categories">
+        <div class="container">
+            <h2 class="section-title">Популярные категории</h2>
+            <div class="categories-grid-4">
+                <a href="heating.html" class="category-card-4">
+                    <div class="category-icon-4"><i class="fas fa-fire"></i></div>
+                    <h3>Котлы</h3>
+                    <p>Электрические и твердотопливные</p>
+                </a>
+                <a href="heating.html" class="category-card-4">
+                    <div class="category-icon-4"><i class="fas fa-window-maximize"></i></div>
+                    <h3>Радиаторы</h3>
+                    <p>Алюминиевые и биметаллические</p>
+                </a>
+                <a href="plumbing.html" class="category-card-4">
+                    <div class="category-icon-4"><i class="fas fa-faucet"></i></div>
+                    <h3>Смесители</h3>
+                    <p>Для кухни и ванной</p>
+                </a>
+                <a href="heating.html" class="category-card-4">
+                    <div class="category-icon-4"><i class="fas fa-grip-lines"></i></div>
+                    <h3>Трубы и фитинги</h3>
+                    <p>Всё для монтажа</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="popular-products">
+        <div class="container">
+            <h2 class="section-title">Хиты продаж</h2>
+            <div class="products-grid" id="popularProducts">
+                <div class="product-card skeleton">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-text small"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="advantages">
+        <div class="container">
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <i class="fas fa-truck"></i>
+                    <h4>Быстрая доставка</h4>
+                    <p>привозим товары под заказ</p>
+                </div>
+                <div class="advantage-card">
+                    <i class="fas fa-medal"></i>
+                    <h4>Гарантия качества</h4>
+                    <p>Только проверенные бренды</p>
+                </div>
+                <div class="advantage-card">
+                    <i class="fas fa-headset"></i>
+                    <h4>Поддержка 24/7</h4>
+                    <p>Всегда на связи</p>
+                </div>
+                <div class="advantage-card">
+                    <i class="fas fa-tag"></i>
+                    <h4>Лучшие цены</h4>
+                    <p>Работаем без посредников</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Наши услуги</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-fire"></i></div>
+                    <h3>Монтаж отопления</h3>
+                    <p>Профессиональная установка систем отопления любой сложности</p>
+                    <ul>
+                        <li>Установка котлов</li>
+                        <li>Монтаж радиаторов</li>
+                        <li>Тёплые полы</li>
+                        <li>Пусконаладка</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-faucet"></i></div>
+                    <h3>Сантехнические работы</h3>
+                    <p>Полный спектр сантехнических услуг</p>
+                    <ul>
+                        <li>Установка сантехники</li>
+                        <li>Замена труб</li>
+                        <li>Монтаж водоснабжения</li>
+                        <li>Канализация</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-tools"></i></div>
+                    <h3>Ремонт и обслуживание</h3>
+                    <p>Качественный ремонт и сервисное обслуживание</p>
+                    <ul>
+                        <li>Диагностика систем</li>
+                        <li>Замена оборудования</li>
+                        <li>Аварийный ремонт</li>
+                        <li>Сезонное обслуживание</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-calculator"></i></div>
+                    <h3>Консультации и расчёт</h3>
+                    <p>Профессиональная помощь в выборе оборудования</p>
+                    <ul>
+                        <li>Подбор оборудования</li>
+                        <li>Проектирование</li>
+                        <li>Расчёт мощности</li>
+                        <li>Выезд специалиста</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2 class="section-title" style="text-align: left;">О магазине ТЕПЛОСИЛА</h2>
+                    <p><strong>ТЕПЛОСИЛА</strong> — магазин оборудования для отопления и сантехники в Караколе. Более 5+ лет мы помогаем нашим покупателям создавать тепло и уют в домах.</p>
+                    <p>Наши специалисты подберут оптимальное решение для вашего объекта, а собственный склад гарантирует наличие товаров по лучшим ценам.</p>
+                    <div class="about-features">
+                        <div class="feature"><i class="fas fa-check-circle"></i> 5+ лет на рынке</div>
+                        <div class="feature"><i class="fas fa-check-circle"></i> 1000+ довольных клиентов</div>
+                        <div class="feature"><i class="fas fa-check-circle"></i> Гарантия качества</div>
+                        <div class="feature"><i class="fas fa-check-circle"></i> Собственный склад</div>
+                        <div class="feature"><i class="fas fa-check-circle"></i> Профессиональная консультация</div>
+                        <div class="feature"><i class="fas fa-check-circle"></i> привозим товары под заказ</div>
+                    </div>
+                </div>
+                <div class="about-collage">
+                    <div class="collage-grid">
+                        <div class="collage-item large">
+                            <img src="logo/primer.png" alt="Магазин ТЕПЛОСИЛА" onerror="this.style.display='none'">
+                            <div class="collage-placeholder" style="display: none;"><i class="fas fa-store"></i> Фасад магазина</div>
+                        </div>
+                        <div class="collage-item">
+                            <img src="logo/snaruji1.png" alt="Внутри магазина" onerror="this.style.display='none'">
+                            <div class="collage-placeholder" style="display: none;"><i class="fas fa-shopping-bag"></i> Торговый зал</div>
+                        </div>
+                        <div class="collage-item">
+                            <img src="logo/kotli.png" alt="Товары" onerror="this.style.display='none'">
+                            <div class="collage-placeholder" style="display: none;"><i class="fas fa-box"></i> Товары</div>
+                        </div>
+                        <div class="collage-item">
+                            <img src="logo/1etaj.jpg" alt="Склад" onerror="this.style.display='none'">
+                            <div class="collage-placeholder" style="display: none;"><i class="fas fa-warehouse"></i> Склад</div>
+                        </div>
+                        <div class="collage-item">
+                            <img src="logo/vnutri.png" alt="Наша команда" onerror="this.style.display='none'">
+                            <div class="collage-placeholder" style="display: none;"><i class="fas fa-users"></i> Команда</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacts" class="contacts">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <i class="fas fa-phone"></i>
+                        <h4>Телефон</h4>
+                        <p>+996 (702) 62-26-26</p>
+                        <p>+996 (707) 58-12-12</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email</h4>
+                        <p>teplosola.karakol@gmail.com</p>
+                        <p>adokturbekov9@gmail.com</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>Адрес</h4>
+                        <p>г. Каракол, ул. Карасаева 184</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-clock"></i>
+                        <h4>Режим работы</h4>
+                        <p>Пн-Сб: 9:00 - 19:00</p>
+                        <p>Вс: 10:00 - 18:00</p>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d183.8835537980897!2d78.4114095109892!3d42.488642947425646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38865b001b7bfd83%3A0xedf4203780e507e3!2z0KLQldCf0JvQniDQodCY0JvQkA!5e0!3m2!1sru!2skg!4v1771869043051!5m2!1sru!2skg" width="100%" height="100%" style="border:0; border-radius:20px;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="callback">
+        <div class="container">
+            <div class="callback-card">
+                <h2>Остались вопросы?</h2>
+                <p>Оставьте заявку, и мы перезвоним вам в течение 15 минут</p>
+                <form class="callback-form" id="callbackForm">
+                    <input type="text" placeholder="Ваше имя" required>
+                    <input type="tel" placeholder="Номер телефона" required>
+                    <button type="submit" class="callback-btn">Заказать звонок <i class="fas fa-arrow-right"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="logo/logo.jpg" alt="ТЕПЛОСИЛА" style="width:50px; height:50px; border-radius:50%; object-fit:cover;" onerror="this.onerror=null; this.src='img/default.jpg';">
+                        <h4>ТЕПЛОСИЛА</h4>
+                    </div>
+                    <p>Магазин отопления и сантехники в Караколе.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Каталог</h4>
+                    <ul>
+                        <li><a href="heating.html">Отопление</a></li>
+                        <li><a href="plumbing.html">Сантехника</a></li>
+                        <li><a href="heating.html#kotly">Котлы</a></li>
+                        <li><a href="heating.html#radiatory">Радиаторы</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="#about">О магазине</a></li>
+                        <li><a href="#services">Услуги</a></li>
+                        <li><a href="#contacts">Контакты</a></li>
+                        <li><a href="#">Доставка и оплата</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Контакты</h4>
+                    <ul class="footer-contacts">
+                        <li><i class="fas fa-phone"></i> +996 (702) 62-26-26</li>
+                        <li><i class="fas fa-envelope"></i> teplosola.karakol@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> г. Каракол, ул. Карасаева 184</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ТЕПЛОСИЛА. Все права защищены.</p>
+                <a href="admin-login.html" class="admin-secret-link"><i class="fas fa-cog"></i> Админ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Фиксированная кнопка корзины для мобильных -->
+    <a href="cart.html" class="fixed-cart-btn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </a>
+
+    <script src="script.js"></script>
+    <script>
+        // Обработка формы обратного звонка
+        document.getElementById('callbackForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = e.target.querySelector('input[type="text"]').value;
+            const phone = e.target.querySelector('input[type="tel"]').value;
+            alert(`Спасибо, ${name}! Мы перезвоним вам по номеру ${phone} в ближайшее время.`);
+            e.target.reset();
+        });
+        
+        // Мобильное меню
+        const menuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuClose = document.getElementById('mobileMenuClose');
+        
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            const closeMenu = () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+            
+            if (menuClose) menuClose.addEventListener('click', closeMenu);
+            mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+            mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMenu(); });
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Загрузка популярных товаров
+        async function loadPopularProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                if (response.ok) {
+                    const allProducts = await response.json();
+                    const popular = allProducts.filter(p => p.is_popular == 1).slice(0, 4);
+                    
+                    const container = document.getElementById('popularProducts');
+                    if (container) {
+                        if (popular.length > 0) {
+                            container.innerHTML = popular.map(p => `
+                                <div class="product-card">
+                                    ${p.is_popular ? '<span class="product-badge popular">🔥 ХИТ</span>' : ''}
+                                    <img src="${p.image_url || 'img/default.jpg'}" alt="${escapeHtml(p.name)}" onerror="this.src='img/default.jpg';">
+                                    <h4>${escapeHtml(p.name)}</h4>
+                                    <p>${escapeHtml(p.description || '')}</p>
+                                    <div class="price">${(p.price || 0).toLocaleString()} сом</div>
+                                    <div class="quantity-control">
+                                        <button class="quantity-btn qty-minus">−</button>
+                                        <input class="quantity-input" value="1" min="1">
+                                        <span class="quantity-unit">${p.unit || 'шт'}</span>
+                                        <button class="quantity-btn qty-plus">+</button>
+                                    </div>
+                                    <button class="add-to-cart-btn" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price || 0}" data-image="${p.image_url || 'img/default.jpg'}">
+                                        <i class="fas fa-shopping-cart"></i> В корзину
+                                    </button>
+                                </div>
+                            `).join('');
+                            
+                            if (typeof window.initQuantityControls === 'function') {
+                                setTimeout(() => window.initQuantityControls(container), 100);
+                            }
+                        } else {
+                            container.innerHTML = `<div class="empty-products"><i class="fas fa-box-open"></i><p>Популярные товары скоро появятся</p></div>`;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Ошибка:', err);
+            }
+        }
+        
+        // Обновление счётчика корзины
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('teplosilaCart') || '{"count":0}');
+            document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.count || 0);
+        }
+        
+        // Запуск
+        loadPopularProducts();
+        updateCartCount();
+        setInterval(updateCartCount, 1000);
+    </script>
+</body>
+</html>
